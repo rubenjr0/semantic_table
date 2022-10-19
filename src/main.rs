@@ -1,12 +1,15 @@
 mod expression;
+mod semantic_table;
 
 use expression::Expression;
+use semantic_table::SemanticTable;
 
 fn main() {
     // (a -> b) ^ (b -> a) ^ -a
-    let omega = vec!["|-ab", "|a-b", "&ab", "-a"];
-    let omega: Vec<Expression> = omega.iter().map(|expr| Expression::parse(expr)).collect();
-    for expr in &omega {
-        println!("{expr:?} -> {:?}", expr.rule());
+    let expressions = vec!["|-ab", "|a-b", "&ab"];
+    let omega = SemanticTable::parse_set(&expressions);
+    for expr in omega.expressions() {
+        println!("{}", expr.to_string());
     }
+    omega.models(Expression::parse("-a").0);
 }
